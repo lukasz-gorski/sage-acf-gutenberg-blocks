@@ -1,0 +1,19 @@
+{
+  "name": "ukasz-gorski/sage-acf-gutenberg-blocks",
+  "description": "Gutenberg Blocks for Roots/Sage theme",
+  "keywords": ["wordpress", "advanced custom fields", "json", "sage", "roots"],
+  "homepage": "https://github.com/lukasz-gorski/sage-acf-gutenberg-blocks.git",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Łukasz Górski",
+      "email": "dev.lukasz.gorski@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2"
+  },
+  "autoload": {
+    "files": ["sage-acf-gutenberg-blocks.php"]
+  }
+}
