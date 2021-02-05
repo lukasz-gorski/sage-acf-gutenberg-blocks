@@ -7,7 +7,9 @@
   "authors": [
     {
       "name": "Łukasz Górski",
-      "email": "dev.lukasz.gorski@gmail.com"
+      "email": "dev.lukasz.gorski@gmail.com",
+      "homepage": "https://lukasz-gorski.dev",
+      "role": "Developer"
     }
   ],
   "require": {
