@@ -44,6 +44,7 @@ add_action('acf/init', function () {
                 $config = "{$block_path}/config.php";
                 $theme_url = get_template_directory_uri();
                 $theme_path = get_template_directory();
+                $dist_path = 'dist/styles/blocks';
 
                 $file_headers = get_file_data($file, [
                     'title' => 'Title',
@@ -59,8 +60,8 @@ add_action('acf/init', function () {
                         'align' => ['full', 'center', 'wide'],
                     ],
                     'align' => empty($file_headers['align']) ? 'full' : $file_headers['align'],
-                    'has_style' => file_exists("{$theme_path}/{$blocks_path}/{$block_name}/style.min.css"),
-                    'has_script' => file_exists("{$theme_path}/{$blocks_path}/{$block_name}/script.min.js"),
+                    'has_style' => file_exists("{$theme_path}/{$dist_path}/{$block_name}/style.css"),
+                    'has_script' => file_exists("{$theme_path}/{$dist_path}/{$block_name}/script.js"),
                     'example' => [
                         'attributes' => [
                             'mode' => 'preview',
@@ -73,15 +74,11 @@ add_action('acf/init', function () {
                 ];
 
                 if (isset($options['has_style']) && $options['has_style']) {
-                    if (is_admin()) {
-                        wp_enqueue_style($options['name'], "{$theme_url}/{$blocks_path}/{$block_name}/style.max.css", array(), filemtime("{$theme_path}/{$blocks_path}/{$block_name}/style.max.css"), 'all');
-                    } else {
-                        wp_enqueue_style($options['name'], "{$theme_url}/{$blocks_path}/{$block_name}/style.min.css", array(), filemtime("{$theme_path}/{$blocks_path}/{$block_name}/style.min.css"), 'all');
-                    }
+                    wp_enqueue_style($options['name'], "{$theme_url}/{$dist_path}/{$block_name}/style.css", array(), filemtime("{$theme_path}/{$dist_path}/{$block_name}/style.min.css"), 'all');
                 }
                 if (!is_admin()) {
                     if (isset($options['has_script']) && $options['has_script']) {
-                        wp_enqueue_script($options['name'], "{$theme_url}/{$blocks_path}/{$block_name}/script.min.js#defer", array('jquery'), filemtime("{$theme_path}/{$blocks_path}/{$block_name}/script.min.js"), true);
+                        wp_enqueue_script($options['name'], "{$theme_url}/{$dist_path}/{$block_name}/script.js#defer", array('jquery'), filemtime("{$theme_path}/{$dist_path}/{$block_name}/script.min.js"), true);
                     }
                 }
 
