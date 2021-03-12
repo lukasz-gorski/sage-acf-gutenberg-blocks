@@ -7,20 +7,22 @@
 
 namespace App;
 
-if (! function_exists('acf_register_block_type')) {
-    return;
-}
-if (! function_exists('add_filter')) {
-    return;
-}
-if (! function_exists('add_action')) {
-    return;
-}
+add_action('after_setup_theme', function () {
 
-add_filter('sage-acf-gutenberg-blocks-templates', function () {
-    return ['views/blocks'];
-});
+    if (!function_exists('acf_register_block_type')) {
+        return;
+    }
+    if (!function_exists('add_filter')) {
+        return;
+    }
+    if (!function_exists('add_action')) {
+        return;
+    }
 
+    add_filter('sage-acf-gutenberg-blocks-templates', function () {
+        return ['views/blocks'];
+    });
+}, 30);
 
 add_action('acf/init', function () {
     global $sage_error;
