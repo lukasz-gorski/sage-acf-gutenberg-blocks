@@ -1,28 +1,26 @@
 <?php
 /**
  * Gutenberg Blocks for Roots/Sage theme 10
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Łukasz Górski / TotalDigital
  */
 
 namespace App;
 
-add_action('after_setup_theme', function () {
+if (!function_exists('acf_register_block_type')) {
+    return;
+}
+if (!function_exists('add_filter')) {
+    return;
+}
+if (!function_exists('add_action')) {
+    return;
+}
 
-    if (!function_exists('acf_register_block_type')) {
-        return;
-    }
-    if (!function_exists('add_filter')) {
-        return;
-    }
-    if (!function_exists('add_action')) {
-        return;
-    }
+add_filter('sage-acf-gutenberg-blocks-templates', function () {
+    return ['views/blocks'];
+});
 
-    add_filter('sage-acf-gutenberg-blocks-templates', function () {
-        return ['views/blocks'];
-    });
-}, 30);
 
 add_action('acf/init', function () {
     global $sage_error;
@@ -57,7 +55,7 @@ add_action('acf/init', function () {
                     'name' => $block_name,
                     'title' => __($file_headers['title']),
                     'category' => $file_headers['category'],
-                    'render_callback'  => __NAMESPACE__.'\\blocks_callback',
+                    'render_callback' => __NAMESPACE__ . '\\blocks_callback',
                     'supports' => [
                         'align' => ['full', 'center', 'wide'],
                     ],
@@ -85,7 +83,7 @@ add_action('acf/init', function () {
                 }
 
 
-                \acf_register_block_type( apply_filters( "sage/blocks/$block_name/register-data", $options ) );
+                \acf_register_block_type(apply_filters("sage/blocks/$block_name/register-data", $options));
 
                 if (!file_exists($config)) {
                     continue;
@@ -103,9 +101,10 @@ add_action('acf/init', function () {
     }
 });
 
-function blocks_callback($block, $content = '', $is_preview = false, $post_id = 0) {
+function blocks_callback($block, $content = '', $is_preview = false, $post_id = 0)
+{
 
-    $slug  = str_replace('acf/', '', $block['name']);
+    $slug = str_replace('acf/', '', $block['name']);
 
     $block['post_id'] = $post_id;
     $block['preview'] = $is_preview;
@@ -116,7 +115,7 @@ function blocks_callback($block, $content = '', $is_preview = false, $post_id = 
         $slug,
         $block['className'],
         $block['preview'] ? 'is-preview' : null,
-        'align'.$block['align']
+        'align' . $block['align']
     ];
     $block['preview_image'] = $block['example']['attributes']['data']['preview_image'];
 
