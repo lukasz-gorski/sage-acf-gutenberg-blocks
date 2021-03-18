@@ -1,7 +1,7 @@
 <?php
 /**
  * Gutenberg Blocks for Roots/Sage theme 10
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Łukasz Górski / TotalDigital
  */
 
