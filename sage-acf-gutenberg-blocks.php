@@ -7,106 +7,110 @@
 
 namespace App;
 
-add_action('after_setup_theme', function () {
+if (function_exists('add_action')) {
+    add_action('after_setup_theme', function () {
 
-    if (!function_exists('acf_register_block_type')) {
-        return;
-    }
-    if (!function_exists('add_filter')) {
-        return;
-    }
-    if (!function_exists('add_action')) {
-        return;
-    }
-
-    add_filter('sage-acf-gutenberg-blocks-templates', function () {
-        return ['views/blocks'];
-    });
-}, 30);
-
-add_action('acf/init', function () {
-    global $sage_error;
-    $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
-    foreach ($directories as $directory) {
-        $dir = \Roots\resource_path('views/blocks');
-        $blocks_path = ('resources/views/blocks');
-
-        if (!file_exists($dir)) {
+        if (!function_exists('acf_register_block_type')) {
+            return;
+        }
+        if (!function_exists('add_filter')) {
+            return;
+        }
+        if (!function_exists('add_action')) {
             return;
         }
 
-        $blocks_directory = new \DirectoryIterator($dir);
+        add_filter('sage-acf-gutenberg-blocks-templates', function () {
+            return ['views/blocks'];
+        });
+    }, 30);
+}
 
-        foreach ($blocks_directory as $directory) {
-            if (!$directory->isDot()) {
+if (function_exists('add_action')) {
+    add_action('acf/init', function () {
+        global $sage_error;
+        $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
+        foreach ($directories as $directory) {
+            $dir = \Roots\resource_path('views/blocks');
+            $blocks_path = ('resources/views/blocks');
 
-                $block_name = $directory->getFilename();
-                $block_path = "{$dir}/{$block_name}";
-                $file = "{$block_path}/{$block_name}.blade.php";
-                $config = "{$block_path}/config.php";
-                $theme_url = get_template_directory_uri();
-                $theme_path = get_template_directory();
-                $dist_css = 'public/styles/blocks';
-                $dist_js = 'public/scripts/blocks';
+            if (!file_exists($dir)) {
+                return;
+            }
 
-                $file_headers = get_file_data($file, [
-                    'title' => 'Title',
-                    'category' => 'Category',
-                ]);
+            $blocks_directory = new \DirectoryIterator($dir);
 
-                $options = [
-                    'name' => $block_name,
-                    'title' => __($file_headers['title']),
-                    'category' => $file_headers['category'],
-                    'render_callback'  => __NAMESPACE__.'\\blocks_callback',
-                    'supports' => [
-                        'align' => ['full', 'center', 'wide'],
-                    ],
-                    'align' => empty($file_headers['align']) ? 'full' : $file_headers['align'],
-                    'has_style' => file_exists("{$theme_path}/{$dist_css}/{$block_name}/style.css"),
-                    'has_script' => file_exists("{$theme_path}/{$dist_js}/{$block_name}/script.js"),
-                    'example' => [
-                        'attributes' => [
-                            'mode' => 'preview',
-                            'data' => [
-                                'preview_image' => "{$theme_url}/{$blocks_path}/{$block_name}/screenshot.png",
-                                "is_preview" => 1
-                            ],
-                        ]
-                    ],
-                ];
+            foreach ($blocks_directory as $directory) {
+                if (!$directory->isDot()) {
 
-                if (isset($options['has_style']) && $options['has_style']) {
-                    wp_enqueue_style($options['name'], "{$theme_url}/{$dist_css}/{$block_name}/style.css", array(), filemtime("{$theme_path}/{$dist_css}/{$block_name}/style.css"), 'all');
-                }
-                if (!is_admin()) {
-                    if (isset($options['has_script']) && $options['has_script']) {
-                        wp_enqueue_script($options['name'], "{$theme_url}/{$dist_js}/{$block_name}/script.js#defer", array('jquery'), filemtime("{$theme_path}/{$dist_js}/{$block_name}/script.js"), true);
+                    $block_name = $directory->getFilename();
+                    $block_path = "{$dir}/{$block_name}";
+                    $file = "{$block_path}/{$block_name}.blade.php";
+                    $config = "{$block_path}/config.php";
+                    $theme_url = get_template_directory_uri();
+                    $theme_path = get_template_directory();
+                    $dist_css = 'public/styles/blocks';
+                    $dist_js = 'public/scripts/blocks';
+
+                    $file_headers = get_file_data($file, [
+                        'title' => 'Title',
+                        'category' => 'Category',
+                    ]);
+
+                    $options = [
+                        'name' => $block_name,
+                        'title' => __($file_headers['title']),
+                        'category' => $file_headers['category'],
+                        'render_callback' => __NAMESPACE__ . '\\blocks_callback',
+                        'supports' => [
+                            'align' => ['full', 'center', 'wide'],
+                        ],
+                        'align' => empty($file_headers['align']) ? 'full' : $file_headers['align'],
+                        'has_style' => file_exists("{$theme_path}/{$dist_css}/{$block_name}/style.css"),
+                        'has_script' => file_exists("{$theme_path}/{$dist_js}/{$block_name}/script.js"),
+                        'example' => [
+                            'attributes' => [
+                                'mode' => 'preview',
+                                'data' => [
+                                    'preview_image' => "{$theme_url}/{$blocks_path}/{$block_name}/screenshot.png",
+                                    "is_preview" => 1
+                                ],
+                            ]
+                        ],
+                    ];
+
+                    if (isset($options['has_style']) && $options['has_style']) {
+                        wp_enqueue_style($options['name'], "{$theme_url}/{$dist_css}/{$block_name}/style.css", array(), filemtime("{$theme_path}/{$dist_css}/{$block_name}/style.css"), 'all');
                     }
+                    if (!is_admin()) {
+                        if (isset($options['has_script']) && $options['has_script']) {
+                            wp_enqueue_script($options['name'], "{$theme_url}/{$dist_js}/{$block_name}/script.js#defer", array('jquery'), filemtime("{$theme_path}/{$dist_js}/{$block_name}/script.js"), true);
+                        }
+                    }
+
+
+                    \acf_register_block_type(apply_filters("sage/blocks/$block_name/register-data", $options));
+
+                    if (!file_exists($config)) {
+                        continue;
+                    }
+                    require_once($config);
+                    acf_add_local_field_group([
+                        "key" => "group_{$block_name}",
+                        "title" => "BLOCK: {$file_headers['title']}",
+                        "fields" => $fields,
+                        'location' => [[['param' => 'block', 'operator' => '==', 'value' => "acf/{$block_name}"]]],
+                    ]);
+
                 }
-
-
-                \acf_register_block_type( apply_filters( "sage/blocks/$block_name/register-data", $options ) );
-
-                if (!file_exists($config)) {
-                    continue;
-                }
-                require_once($config);
-                acf_add_local_field_group([
-                    "key" => "group_{$block_name}",
-                    "title" => "BLOCK: {$file_headers['title']}",
-                    "fields" => $fields,
-                    'location' => [[['param' => 'block', 'operator' => '==', 'value' => "acf/{$block_name}"]]],
-                ]);
-
             }
         }
-    }
-});
+    });
+}
 
 function blocks_callback($block, $content = '', $is_preview = false, $post_id = 0) {
 
-    $slug  = str_replace('acf/', '', $block['name']);
+    $slug = str_replace('acf/', '', $block['name']);
 
     $block['post_id'] = $post_id;
     $block['preview'] = $is_preview;
@@ -116,7 +120,7 @@ function blocks_callback($block, $content = '', $is_preview = false, $post_id = 
     $block['classes'] = [
         $slug,
         $block['preview'] ? 'is-preview' : null,
-        'align'.$block['align']
+        'align' . $block['align']
     ];
     $block['preview_image'] = $block['example']['attributes']['data']['preview_image'];
 
