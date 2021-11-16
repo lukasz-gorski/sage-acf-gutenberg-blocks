@@ -1,7 +1,7 @@
 <?php
 /**
  * Gutenberg Blocks for Roots/Sage theme 10
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: Łukasz Górski / TotalDigital
  */
 
@@ -66,24 +66,11 @@ if ( function_exists( 'add_action' ) ) {
                             'align' => [ 'full', 'center', 'wide' ],
                         ],
                         'align'           => empty( $file_headers['align'] ) ? 'full' : $file_headers['align'],
-                        'has_style'       => file_exists( "{$theme_path}/{$dist_css}/{$block_name}/style.css" ),
-                        'has_script'      => file_exists( "{$theme_path}/{$dist_js}/{$block_name}/script.js" ),
                         'theme_url' => $theme_url,
                         'dist_css' => $dist_css,
                         'dist_js' => $dist_js,
                         'theme_path' => $theme_path,
                         'block_name' => $block_name,
-                        'enqueue_assets'  => function ($options) {
-                            if (isset($options['has_style']) && $options['has_style']) {
-                                wp_enqueue_style( $options['block_name'], "{$options['theme_url']}/{$options['dist_css']}/{$options['block_name']}/style.css", array(), filemtime( "{$options['theme_path']}/{$options['dist_css']}/{$options['block_name']}/style.css" ), 'all' );
-                            }
-                            if (!is_admin()) {
-                                if (isset($options['has_script']) && $options['has_script']) {
-                                    wp_enqueue_script( $options['block_name'], "{$options['theme_url']}/{$options['dist_js']}/{$options['block_name']}/script.js", array( 'jquery' ), filemtime( "{$options['theme_path']}/{$options['dist_js']}/{$options['block_name']}/script.js" ), true );
-                                }
-                            }
-
-                        },
                         'example'         => [
                             'attributes' => [
                                 'mode' => 'preview',
