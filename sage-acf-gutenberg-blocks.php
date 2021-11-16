@@ -1,7 +1,7 @@
 <?php
 /**
  * Gutenberg Blocks for Roots/Sage theme 10
- * Version: 1.0.6
+ * Version: 1.0.7
  * Author: Łukasz Górski / TotalDigital
  */
 
@@ -49,14 +49,10 @@ if ( function_exists( 'add_action' ) ) {
                     $config     = "{$block_path}/config.php";
                     $theme_url  = get_template_directory_uri();
                     $theme_path = get_template_directory();
-                    $dist_css   = 'public/styles/blocks';
-                    $dist_js    = 'public/scripts/blocks';
-
                     $file_headers = get_file_data( $file, [
                         'title'    => 'Title',
                         'category' => 'Category',
                     ] );
-
                     $options = [
                         'name'            => $block_name,
                         'title'           => __( $file_headers['title'] ),
@@ -67,8 +63,6 @@ if ( function_exists( 'add_action' ) ) {
                         ],
                         'align'           => empty( $file_headers['align'] ) ? 'full' : $file_headers['align'],
                         'theme_url' => $theme_url,
-                        'dist_css' => $dist_css,
-                        'dist_js' => $dist_js,
                         'theme_path' => $theme_path,
                         'block_name' => $block_name,
                         'example'         => [
